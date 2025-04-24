@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNS 자동 프로그램</title>
+  <link rel="stylesheet" href="https://www.stunningw.com/setting.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+   
+  
+    <div class="table-container wwP100 bco_white wrd008">
+      <table class="styled-table wwP100 fs_w02">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="masterCheckbox" /></th>
+            <th>ID</th>
+            <th class="f_c">
+              글제목 <span class="fs_w01 co_gray6 wmxp008 f_bo4">※ 클릭하여 상세보기</span>
+            </th>
+            <th>
+              <div class="dropdown wdpf wAC wJC" data-filter="likes">
+                좋아요 <span class="dropdown-toggle"></span>
+                <div class="dropdown-menu">
+                  <div class="fs_w01 f_bo5" data-order="desc">많은 순</div>
+                  <div class="fs_w01 f_bo5" data-order="asc">적은 순</div>
+                </div>
+              </div>
+            </th>
+            <th>
+              <div class="dropdown wdpf wAC wJC" data-filter="comments">
+                댓글 <span class="dropdown-toggle"></span>
+                <div class="dropdown-menu">
+                  <div class="fs_w01 f_bo5" data-order="desc">많은 순</div>
+                  <div class="fs_w01 f_bo5" data-order="asc">적은 순</div>
+                </div>
+              </div>
+            </th>
+            <th>
+              <div class="dropdown wdpf wAC wJC" data-filter="retweets">
+                리트윗 <span class="dropdown-toggle"></span>
+                <div class="dropdown-menu">
+                  <div class="fs_w01 f_bo5" data-order="desc">많은 순</div>
+                  <div class="fs_w01 f_bo5" data-order="asc">적은 순</div>
+                </div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tweetTableBody">
+          {% for i in range(nicknames|length) %}
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td class="wwP020">{{ nicknames[i] }}</td>
+            <td class="title-cell wwP035" data-full="{{ contents[i] }}">
+              {{ contents[i][:30] ~ ('...' if contents[i]|length > 30 else '') }}
+            </td>
+            <td class="wwP015 f_c">{{ likes[i] }}</td>
+            <td class="wwP015 f_c">{{ comments[i] }}</td>
+            <td class="wwP015 f_c">{{ retweets[i] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- 모달 -->
+    <div class="modal-overlay" id="modal">
+      <div class="modal">
+        <div class="modal-header">
+          글 내용 보기
+          <span class="modal-close" id="modalClose">&times;</span>
+        </div>
+        <div class="modal-body" id="modalContent"></div>
+      </div>
+    </div>
+  
+    <script>
+      const modal = document.getElementById('modal');
+      const modalContent = document.getElementById('modalContent');
+      const modalClose = document.getElementById('modalClose');
+  
+      function attachModalListeners() {
+        document.querySelectorAll('.title-cell').forEach(cell => {
+          cell.addEventListener('click', () => {
+            modalContent.textContent = cell.dataset.full;
+            modal.style.display = 'flex';
+          });
+        });
+      }
+  
+      modalClose.addEventListener('click', () => modal.style.display = 'none');
+      window.addEventListener('click', e => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+  
+      // 드롭다운 정렬
+      let tableData = [];
+      document.querySelectorAll('#tweetTableBody tr').forEach(row => {
+        const cells = row.querySelectorAll('td');
+        tableData.push({
+          rowElement: row,
+          id: cells[1].textContent.trim(),
+          title: cells[2].dataset.full,
+          likes: parseInt(cells[3].textContent),
+          comments: parseInt(cells[4].textContent),
+          retweets: parseInt(cells[5].textContent),
+        });
+      });
+  
+      document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', e => {
+          e.stopPropagation();
+          document.querySelectorAll('.dropdown').forEach(d => {
+            if (d !== dropdown) d.classList.remove('open');
+          });
+          dropdown.classList.toggle('open');
+        });
+  
+        dropdown.querySelectorAll('.dropdown-menu div').forEach(option => {
+          option.addEventListener('click', () => {
+            const key = dropdown.dataset.filter;
+            const order = option.dataset.order;
+            tableData.sort((a, b) => order === 'desc' ? b[key] - a[key] : a[key] - b[key]);
+  
+            const tbody = document.getElementById('tweetTableBody');
+            tbody.innerHTML = '';
+            tableData.forEach(d => tbody.appendChild(d.rowElement));
+  
+            dropdown.classList.remove('open');
+          });
+        });
+      });
+  
+      window.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+      });
+  
+      attachModalListeners();
+  
+      // 전체 선택
+      document.getElementById('masterCheckbox').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('#tweetTableBody input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+      });
+    </script>
+  
+  </body>
+</html>

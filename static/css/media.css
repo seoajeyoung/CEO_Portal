@@ -1,0 +1,62 @@
+@charset "utf-8";
+/*************** 1440px 이하 ***************/
+@media only screen and (max-width: 1440px) {
+
+
+}
+  
+/*************** 1124px 이하 ***************/
+@media only screen and (max-width: 1124px) {
+    .hamburger-menu {
+        display: flex;
+      }
+      
+      .sidebar {
+        transform: translateX(-100%);
+        width: 70%;
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .overlay.active {
+        display: block;
+      }
+      
+      body.menu-open {
+        overflow: hidden;
+      }
+
+
+}
+
+/*************** 1024px 이하 ***************/
+@media only screen and (max-width: 1024px) {
+
+}
+
+/*************** 960px 이하 ***************/
+@media only screen and (max-width: 960px) {
+
+}
+
+/*************** 860px 이하 ***************/
+@media only screen and (max-width: 860px) {
+}
+
+/*************** 768px 이하 ***************/
+@media only screen and (max-width: 768px) {
+    
+
+}
+
+/*************** 480px 이하 ***************/
+@media only screen and (max-width: 480px) {
+
+}
+
+/*************** 320px 이하 ***************/
+@media only screen and (max-width: 320px) {
+
+}
