@@ -45,8 +45,6 @@ lock = threading.Lock()
 
 
 
-SUPABASE_URL = "https://xbigcwlmpfbsyjzieema.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiaWdjd2xtcGZic3lqemllZW1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMwNDg0OTksImV4cCI6MjA1ODYyNDQ5OX0.HMmb3C742UN8tqL8zZszJXIMmCIOfQl8OoAeVMcXdkI"
 
 SUPABASE_HEADERS = {
     "apikey": SUPABASE_KEY,
